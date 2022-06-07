@@ -1,21 +1,25 @@
 
 <template>
-  <div class="flex relative">
-    <ListVue v-for="(item, index) in board" @createNewTask="onTaskCreate($event, index)"
-      @taskEdit="onTaskEdit($event, index)" @taskDelete="onTaskDelete($event, index)"
-      @taskToggle="onTaskToggle($event, index)" @deleteList="onListDelete(index)" :key="index" :list="item">
-    </ListVue>
-    <div v-if="board.length < 5"
-      class="w-48 bg-teal-700 h-48 rounded-md  flex justify-center items-center m-6 cursor-pointer">
-      <button class="w-full h-full" @click="openModal"><span class="uppercase font-bold text-white ">Add new
-          list</span></button>
+  <div>
+    <div class="main-header">
+      todo
+      list
     </div>
-    <div v-if="showModal"
-      class="rounded-md p-6 shadow-2xl absolute w-1/3 h-48 bg-white border-2 border-teal-700 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
-      <h2 class="mb-2 text-center uppercase font-bold text-teal-700 ">Enter list name please</h2>
-      <input v-model="listName" class="w-full mb-4 border-2 border-teal-700" type="text">
-      <button @click="submitModal" class="bg-cyan-600 text-white font-bold p-2 rounded-md w-full">Create new
-        list</button>
+    <div class="flex relative">
+      <ListVue v-for="(item, index) in board" @createNewTask="onTaskCreate($event, index)"
+        @taskEdit="onTaskEdit($event, index)" @taskDelete="onTaskDelete($event, index)"
+        @taskToggle="onTaskToggle($event, index)" @deleteList="onListDelete(index)" :key="index" :list="item">
+      </ListVue>
+      <div v-if="board.length < 5" class="add-btn">
+        <button class="w-full h-full" @click="openModal"><span class="uppercase font-bold text-white ">Add new
+            list</span></button>
+      </div>
+      <div v-if="showModal" class="modal-window">
+        <h2 class="list-header">Enter list name please</h2>
+        <input v-model="listName" class="input-list-name" type="text">
+        <button :class="{ 'disabled': listName.length < 3 }" @click="submitModal" class="submit-btn">Create new
+          list</button>
+      </div>
     </div>
   </div>
 </template>
@@ -78,39 +82,9 @@ export default {
               value: "English lessons",
               complete: true,
             },
-            {
-              value: "Work meeting",
-              complete: true,
-            },
-            {
-              value: "Go to gym ",
-              complete: false,
-            },
-            {
-              value: "Driver classes",
-              complete: true,
-            },
-            {
-              value: "English lessons",
-              complete: true,
-            },
-            {
-              value: "Work meeting",
-              complete: true,
-            },
-
           ]
         },
-        {
-          name: "Second list",
-          items: [
-            {
-              value: "Find a job",
-              complete: true,
-            }
 
-          ]
-        }
       ]
     }
   }
@@ -118,4 +92,31 @@ export default {
 </script>
 
 <style>
+.disabled {
+  @apply opacity-50 pointer-events-none
+}
+
+.modal-window {
+  @apply rounded-md p-6 shadow-2xl absolute w-1/4 h-48 bg-white border-2 border-teal-700 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
+}
+
+.main-header {
+  @apply font-bold text-3xl uppercase text-teal-700 border-4 border-teal-700 text-center w-1/3 mx-auto my-3 rounded-md
+}
+
+.add-btn {
+  @apply w-48 bg-teal-700 h-48 rounded-md flex justify-center items-center m-6 cursor-pointer
+}
+
+.list-header {
+  @apply mb-2 text-center uppercase font-bold text-teal-700
+}
+
+.input-list-name {
+  @apply w-full mb-4 border-2 rounded-md border-teal-700
+}
+
+.submit-btn {
+  @apply bg-cyan-600 text-white font-bold p-2 rounded-md w-full
+}
 </style>
