@@ -14,27 +14,24 @@
 
       <button @click="deleteList" class="dlt-btn">Delete</button>
     </div>
-
-    <div v-if="showModal" class="modal-window">
-      <h2 class="list-header">Enter new task</h2>
-      <input v-model="taskName" class="input-list-name" type="text">
-      <button :class="{ 'disabled': taskName.length < 3 }" @click="submitModal" class="submit-btn">Submit</button>
-    </div>
+    <ModalVue v-if="showModal" :header="'Enter new task:'" :buttonText="'Create new task'"
+      @onModalSubmit="submitModal($event)"></ModalVue>
   </div>
 </template>
 
 <script>
 import ItemVue from './Item.vue'
+import ModalVue from './Modal.vue'
 export default {
   components: {
-    ItemVue
+    ItemVue,
+    ModalVue,
   },
   props: {
     list: Object
   },
   data() {
     return {
-      taskName: "",
       showModal: false,
     }
   },
@@ -42,10 +39,10 @@ export default {
     openModal() {
       this.showModal = true;
     },
-    submitModal() {
+    submitModal(modalInputValue) {
       this.showModal = false;
       const newTask = {
-        value: this.taskName,
+        value: modalInputValue,
         complete: false
       }
       this.$emit("createNewTask", newTask);
@@ -80,3 +77,4 @@ export default {
   @apply bg-teal-700 h-12 rounded-md flex justify-center items-center m-6 cursor-pointer
 }
 </style>
+

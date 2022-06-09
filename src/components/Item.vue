@@ -5,29 +5,30 @@
         <i class="fa-solid fa-check text-teal-700"></i>
       </div>
       <div @click="toggleCheck" v-else class="task-checkbox-unchecked"></div>
-      <h2>{{ task.value }}</h2>
+      <h2 class="task-name">{{ task.value }}</h2>
       <div class="flex justify-around items-center">
         <button @click="deleteTask"><i class="fa-solid fa-square-minus text-red-500 mr-2"></i></button>
         <button @click="openModal"><i class="fa-solid fa-pen-to-square text-teal-700"></i></button>
       </div>
     </div>
-    <div v-if="showModal" class="modal-window">
-      <h2 class="list-header">Edit task name</h2>
-      <input v-model="editedTaskName" class="input-list-name" type="text">
-      <button :class="{ 'disabled': editedTaskName.length < 3 }" @click="edit" class="submit-btn">Save</button>
-    </div>
+    <ModalVue v-if="showModal" :defaultInputValue="task.value" :header="'Edit task name:'" :buttonText="'Save'"
+      @onModalSubmit="edit($event)">
+    </ModalVue>
   </div>
 </template>
 
 <script>
+import ModalVue from './Modal.vue'
 export default {
+  components: {
+    ModalVue,
+  },
   props: {
     task: Object,
   },
   data() {
     return {
       showModal: false,
-      editedTaskName: this.task.value,
     }
   },
   methods: {
@@ -38,8 +39,8 @@ export default {
     deleteTask() {
       this.$emit("deleteTask", this.task)
     },
-    edit() {
-      const updatedTask = { value: this.editedTaskName, complete: this.task.complete };
+    edit(modalInputValue) {
+      const updatedTask = { value: modalInputValue, complete: this.task.complete };
       this.$emit("editTask", updatedTask);
       this.showModal = false;
     },
@@ -63,4 +64,10 @@ export default {
 .task-checkbox-unchecked {
   @apply w-4 h-4 border-2 border-teal-700 cursor-pointer
 }
+
+.task-name {
+  @apply overflow-hidden text-ellipsis whitespace-nowrap w-36
+}
 </style>
+
+
